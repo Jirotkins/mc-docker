@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+      - "19565:19565"
+    environment:
+      TYPE: "AUTO_CURSEFORGE"
+      CF_API_KEY: "$$2a$$10$$1JIgUb6PL6XKIfmmcKsbruYqxitY7Vgn9eBKd53fscwY2i1LHxzZi"
+      CF_PAGE_URL: "https://www.curseforge.com/minecraft/modpacks/the-pixelmon-modpack/files/4782898"
+      VERSION: "1.20.1"
+      MEMORY: "4G"
+      EULA: "TRUE"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - ./mcdata:/data
+    restart: on-failure:3
+    networks:
+      minecraft:
+        aliases:
+          - minecraft
+
+  prometheus:
+    image: bitnami/prometheus
+    tty: true
+    stdin_open: true
+    ports:
+      - "9090:9090"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - .\prometheus\prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: on-failure:3
+    networks:
+      minecraft:
+        aliases:
+          - prometheus
+
+  grafana:
+    image: grafana/grafana
+    tty: true
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - .\grafana:/var/lib/grafana
+    restart: on-failure:3
+    networks:
+      minecraft:
+        aliases:
+          - grafana
+
+networks:
+  minecraft:
+    name: minecraft
