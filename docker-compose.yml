@@ -32,7 +32,7 @@ services:
       - "9090:9090"
     volumes:
       # attach the relative directory 'data' to the container's /data path
-      - .\prometheus\prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     restart: on-failure:3
     networks:
       minecraft:
@@ -47,7 +47,7 @@ services:
       - "3000:3000"
     volumes:
       # attach the relative directory 'data' to the container's /data path
-      - .\grafana:/var/lib/grafana
+      - ./grafana:/var/lib/grafana
     restart: on-failure:3
     networks:
       minecraft:
